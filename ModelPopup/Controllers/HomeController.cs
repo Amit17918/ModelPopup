@@ -42,8 +42,8 @@ namespace ModelPopup.Controllers
         [HttpPost]
         public ActionResult EmployeeDetails(Employee employee)
         {
-            database.uploadEmployeeDetail(employee);
-            return RedirectToAction("Index");
+            bool isInserted= database.uploadEmployeeDetail(employee);
+            return RedirectToAction("Index","Home",isInserted);
         }
 
         [HttpPost]

@@ -52,7 +52,7 @@ namespace ModelPopup.Utils
         public Employee GetEmployeeData(String id)
         {
             Connect();
-            String query = "select * from employee where and isDeleted=0 and id='" + id+"'";
+            String query = "select * from employee where  isDeleted=0 and id='" + id+"'";
             DataTable dt = new DataTable();
             SqlDataAdapter adapter = new SqlDataAdapter();
             Employee employee = new Employee();
@@ -73,13 +73,20 @@ namespace ModelPopup.Utils
             return employee;
         }
 
-        public void uploadEmployeeDetail(Employee employee)
+        public bool uploadEmployeeDetail(Employee employee)
         {
             Connect();
-            String query = "insert into employee (Name,Email,Phone_No,Address,state,city) values('"+employee.Name+ "','" 
-                + employee.Email + "','" + employee.Phone_No + "','" + employee.Address + "','" + employee.state + "','" 
-                + employee.city + "')";
-
+            String query = "";
+            if (employee.id == null)
+            {
+                 query = "insert into employee (Name,Email,Phone_No,Address,state,city) values('" + employee.Name + "','"
+                    + employee.Email + "','" + employee.Phone_No + "','" + employee.Address + "','" + employee.state + "','"
+                    + employee.city + "')";
+            }else
+            {
+                query = "update employee set Name='" + employee.Name + "',Email='" + employee.Email + "',Phone_No='" + employee.Phone_No + "',Address='"
+                    + employee.Address + "',state='" + employee.state + "',city='" + employee.city + "' where id='"+employee.id+"'";
+            }
             SqlCommand cmd = new SqlCommand(query,cnn);
             cnn.Open();
             int rawAffect=cmd.ExecuteNonQuery();
@@ -87,9 +94,11 @@ namespace ModelPopup.Utils
             if (rawAffect > 0)
             {
                 //Inserted
+                return true;
             }else
             {
                 //Inserted Fail!
+                return false;
             }
         }
 
